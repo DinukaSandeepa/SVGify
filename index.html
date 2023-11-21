@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>CSS to SVG Converter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="input-section">
+      <label for="cssBackground">CSS Background Image URL:</label>
+      <input type="text" id="cssBackground" placeholder="Enter CSS background image URL">
+      <button onclick="convertToSVG()">Convert</button>
+    </div>
+    <div class="output-section">
+      <label for="svgOutput">SVG Output:</label>
+      <textarea id="svgOutput" placeholder="SVG code will appear here" readonly></textarea>
+      <button id="copyBtn" onclick="copyToClipboard()">Copy SVG Code</button>
+      <a id="downloadBtn" download="converted.svg" href="#" style="display: none;">Download SVG</a>
+    </div>
+  </div>
+
+  <script>
+    function convertToSVG() {
+      const cssBackgroundUrl = document.getElementById('cssBackground').value;
+      const decodedSvg = decodeURIComponent(cssBackgroundUrl);
+      const startIdx = decodedSvg.indexOf('<svg');
+      const endIdx = decodedSvg.lastIndexOf('</svg>') + '</svg>'.length;
+      const svgCode = decodedSvg.substring(startIdx, endIdx);
+
+      document.getElementById('svgOutput').value = svgCode;
+
+      // Update download link href attribute and show the download button
+      const downloadLink = document.getElementById('downloadBtn');
+      downloadLink.href = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgCode);
+      downloadLink.style.display = 'inline-block';
+    }
+
+    function copyToClipboard() {
+      const copyText = document.getElementById('svgOutput');
+      copyText.select();
+      copyText.setSelectionRange(0, 99999); // For mobile devices
+      document.execCommand('copy');
+      alert('SVG code copied to clipboard!');
+    }
+  </script>
+</body>
+
+</html>
